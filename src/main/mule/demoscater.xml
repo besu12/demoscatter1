@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd">
+	<flow name="demoscaterFlow" doc:id="10a807bd-23e0-452e-b733-9e858b862638" >
+		<http:listener doc:name="Listener" doc:id="333c082d-fbe3-4cf8-ae72-9519c9e2bc03" config-ref="HTTP_Listener_config" path="/choice"/>
+		<set-variable value="#[message.attributes.queryParams]" doc:name="Set Variable" doc:id="2a565adf-db27-40a8-ba3f-ff2d90eed4b4" variableName="airline"/>
+		<choice doc:name="Choice" doc:id="25d5b37a-e4ad-42c7-86fa-a6f71577ebda" >
+			<when expression='#[vars.airline=="american"]'>
+				<flow-ref doc:name="Flow Reference" doc:id="8fec0a1d-d15a-4faf-81c8-ca3408b3b68a" name="unitedFlow"/>
+			</when>
+			<otherwise>
+				<flow-ref doc:name="Flow Reference" doc:id="d788214b-3e20-40b3-8dff-9470a13cadf7" name="unitedFlow"/>
+			</otherwise>
+		</choice>
+	</flow>
+	<flow name="unitedFlow" doc:id="598756d4-474d-425c-831e-51fd4c8e5477" >
+		<http:request method="GET" doc:name="Request" doc:id="35c0c815-3d66-4266-a8c0-ff9351de3343" config-ref="HTTP_Request_configuration" path="/united/flights"/>
+	</flow>
+</mule>
